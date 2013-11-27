@@ -96,6 +96,11 @@ abstract class AbstractApplication
     public function getApplicationContainer(&$loadedApplications = array())
     {
         if (!$this->containerBuilderCompiled) {
+            if (count($loadedApplications) == 0) {
+                $parent = true;
+            } else {
+                $parent = false;
+            }
             foreach ($this->parentApplications as $app) {
                 if (in_array(get_class($app), $loadedApplications)) {
                     continue;
@@ -109,7 +114,10 @@ abstract class AbstractApplication
             foreach ($this->getConfigurationFiles() as $file) {
                 $this->containerBuilder->import($file);
             }
-            $this->containerBuilder->compile();
+            if ($parent) {
+                $this->containerBuilder->compile();
+            }
+
         }
         return $this->containerBuilder;
     }
@@ -146,6 +154,13 @@ abstract class AbstractApplication
     abstract public function getConfigurationFiles();
 
     /**
+     * Get application name
+     *
+     * @return string
+     */
+    abstract public function getApplicationName();
+
+    /**
      * Get namespace
      *
      * @return string
@@ -154,11 +169,4 @@ abstract class AbstractApplication
     {
         return $this->reflector->getNamespaceName();
     }
-
-    /**
-     * Get application name
-     *
-     * @return string
-     */
-    abstract public function getApplicationName();
 }
