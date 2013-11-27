@@ -126,12 +126,17 @@ abstract class AbstractApplication
      * Configure Application container
      *
      * @param ApplicationContainerBuilder $container
+     * @param array                       $configuredApplications
      */
-    public function configure(ApplicationContainerBuilder $container)
+    public function configure(ApplicationContainerBuilder $container, $configuredApplications = [])
     {
         foreach ($this->parentApplications as $application) {
+            if (in_array(get_class($application), $configuredApplications)) {
+                continue;
+            }
+            $configuredApplications[] = get_class($application);
             /* @var $application AbstractApplication */
-            $application->configure($container);
+            $application->configure($container, $configuredApplications);
         }
         $this->getContainerConfigurator()->configureContainer($container);
     }
