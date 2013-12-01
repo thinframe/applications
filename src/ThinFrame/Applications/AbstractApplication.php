@@ -9,6 +9,7 @@
 
 namespace ThinFrame\Applications;
 
+use PhpCollection\Map;
 use PhpCollection\Sequence;
 use Symfony\Component\Config\FileLocator;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
@@ -42,6 +43,10 @@ abstract class AbstractApplication
      * @var bool
      */
     private $containerBuilderCompiled = false;
+    /**
+     * @var Map
+     */
+    private $metadata;
 
     /**
      * Constructor
@@ -158,12 +163,47 @@ abstract class AbstractApplication
      */
     abstract public function getConfigurationFiles();
 
+    public function getMetadata()
+    {
+        if (is_null($this->metadata)) {
+            $this->metadata = new Map();
+            $this->processMetadata($this->metadata);
+        }
+        return $this->metadata;
+    }
+
+    /**
+     * Process application metadata
+     *
+     * @param Map $metadata
+     */
+    public function processMetadata(Map &$metadata)
+    {
+        $metadata->set($this->getApplicationName(), $appMetadata = new Map($this->metaData()));
+
+        $appMetadata->set('application_name', $this->getApplicationName());
+        $appMetadata->set('application_path', $this->getApplicationPath());
+        $appMetadata->set('application_namespace', $this->getNamespace());
+
+        foreach ($this->getParentApplications() as $app) {
+            $app->processMetadata($metadata);
+        }
+    }
+
     /**
      * Get application name
      *
      * @return string
      */
     abstract public function getApplicationName();
+
+    /**
+     * Get package metadata
+     */
+    protected function metaData()
+    {
+        return [];
+    }
 
     /**
      * Get namespace
