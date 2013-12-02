@@ -163,6 +163,11 @@ abstract class AbstractApplication
      */
     abstract public function getConfigurationFiles();
 
+    /**
+     * Get application metadata
+     *
+     * @return Map
+     */
     public function getMetadata()
     {
         if (is_null($this->metadata)) {
