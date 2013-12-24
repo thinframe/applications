@@ -11,6 +11,7 @@ namespace ThinFrame\Applications\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use ThinFrame\Applications\DependencyInjection\Extensions\AbstractConfigurationManager;
 
 /**
  * ContainerConfigurator - configure container builder with extensions and compiler passes
@@ -41,6 +42,17 @@ class ContainerConfigurator
     public function addAwareInterfaceDefinition(AwareInterfaceDefinition $definition)
     {
         $this->awareInterfacesDefinitions[] = $definition;
+    }
+
+    /**
+     * Add configurator
+     *
+     * @param AbstractConfigurationManager $configurator
+     */
+    public function addConfigurationManager(AbstractConfigurationManager $configurator)
+    {
+        $this->addExtension($configurator);
+        $this->addCompilerPass($configurator);
     }
 
     /**
