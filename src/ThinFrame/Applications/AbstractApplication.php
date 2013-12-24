@@ -12,6 +12,7 @@ namespace ThinFrame\Applications;
 use PhpCollection\Map;
 use PhpCollection\Sequence;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Definition;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
 
@@ -120,6 +121,17 @@ abstract class AbstractApplication
                 $this->containerBuilder->import($file);
             }
             if ($parent) {
+                //setting syntetic services
+                $definition = new Definition();
+                $definition->setSynthetic(true);
+                //inserting container as service
+                $this->containerBuilder->setDefinition('container', $definition);
+                $this->containerBuilder->set('container', $this->containerBuilder);
+
+                //inserting application as service
+                $this->containerBuilder->setDefinition('application', clone $definition);
+                $this->containerBuilder->set('application', $this);
+
                 $this->containerBuilder->compile();
             }
 
