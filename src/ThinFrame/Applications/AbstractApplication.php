@@ -14,6 +14,7 @@ use PhpCollection\Sequence;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
+use ThinFrame\Applications\DependencyInjection\AwareInterfaceDefinition;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
 
 /**
@@ -61,6 +62,21 @@ abstract class AbstractApplication
         $this->parentApplications = $this->getParentApplications();
 
         $this->containerConfigurator = new ContainerConfigurator();
+
+        $this->containerConfigurator->addAwareInterfaceDefinition(
+            new AwareInterfaceDefinition(
+                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareInterface',
+                'setApplication',
+                'application'
+            )
+        );
+        $this->containerConfigurator->addAwareInterfaceDefinition(
+            new AwareInterfaceDefinition(
+                '\Symfony\Component\DependencyInjection\ContainerAwareInterface',
+                'setContainer',
+                'container'
+            )
+        );
 
         $this->initializeConfigurator($this->containerConfigurator);
 
