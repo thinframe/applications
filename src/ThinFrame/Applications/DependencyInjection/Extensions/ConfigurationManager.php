@@ -19,12 +19,34 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
  * @package ThinFrame\Applications\DependencyInjection\Extensions
  * @since   0.2
  */
-abstract class AbstractConfigurationManager implements ExtensionInterface, CompilerPassInterface
+class ConfigurationManager implements ExtensionInterface, CompilerPassInterface
 {
     /**
      * @var array
      */
     private $config = [];
+
+    /**
+     * @var string
+     */
+    private $namespace;
+
+    /**
+     * @var string
+     */
+    private $service;
+
+    /**
+     * Constructor
+     *
+     * @param string $namespace
+     * @param string $service
+     */
+    public function __construct($namespace, $service)
+    {
+        $this->namespace = $namespace;
+        $this->service   = $service;
+    }
 
     /**
      * Loads a specific configuration.
@@ -70,9 +92,17 @@ abstract class AbstractConfigurationManager implements ExtensionInterface, Compi
     }
 
     /**
-     * Get the service that will receive computed configuration
+     * Returns the namespace to be used for this extension (XML namespace).
+     *
+     * @return string The XML namespace
+     *
+     * @api
      */
-    abstract public function getService();
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
 
     /**
      * You can modify the container here before it is dumped to PHP code.
@@ -83,6 +113,6 @@ abstract class AbstractConfigurationManager implements ExtensionInterface, Compi
      */
     public function process(ContainerBuilder $container)
     {
-        $container->getDefinition($this->getService())->addMethodCall('setConfiguration', [$this->config]);
+        $container->getDefinition($this->service)->addMethodCall('setConfiguration', [$this->config]);
     }
 }
