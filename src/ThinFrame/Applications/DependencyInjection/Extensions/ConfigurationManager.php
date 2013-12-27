@@ -74,7 +74,7 @@ class ConfigurationManager implements ExtensionInterface, CompilerPassInterface
      */
     public function getXsdValidationBasePath()
     {
-        //noop
+        return false;
     }
 
     /**
@@ -88,7 +88,7 @@ class ConfigurationManager implements ExtensionInterface, CompilerPassInterface
      */
     public function getAlias()
     {
-        //noop
+        return $this->getNamespace();
     }
 
     /**
