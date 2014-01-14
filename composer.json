@@ -17,13 +17,13 @@
     "require": {
         "php": ">=5.4.0",
         "thinframe/foundation": "dev-master",
-        "symfony/dependency-injection": "dev-master",
-        "symfony/yaml": "dev-master",
-        "symfony/config": "dev-master"
+        "symfony/dependency-injection": "@stable",
+        "symfony/yaml": "@stable",
+        "symfony/config": "@stable"
     },
     "autoload": {
-        "psr-0": {
-            "": "src/"
+        "psr-4": {
+            "ThinFrame\\Applications\\": "src/"
         }
     }
 }
