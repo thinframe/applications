@@ -1,7 +1,7 @@
 <?php
 
 /**
- * /src/ThinFrame/Applications/DependencyInjection/AwareInterfaceDefinition.php
+ * /src/DependencyInjection/ApplicationAwareTrait.php
  *
  * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
@@ -10,17 +10,17 @@
 namespace ThinFrame\Applications\DependencyInjection;
 
 /**
- * AwareInterfaceDefinition - definition of an aware interface
+ * AwareDefinition - definition of an aware objects
  *
  * @package ThinFrame\Applications\DependencyInjection
  * @since   0.2
  */
-class AwareInterfaceDefinition
+class AwareDefinition
 {
     /**
      * @var string
      */
-    private $interface;
+    private $awareIdentifier;
     /**
      * @var string
      */
@@ -33,13 +33,13 @@ class AwareInterfaceDefinition
     /**
      * Class constructor
      *
-     * @param string $interface
+     * @param string $awareIdentifier
      * @param string $method
      * @param string $service
      */
-    public function __construct($interface, $method, $service)
+    public function __construct($awareIdentifier, $method, $service)
     {
-        $this->interface = $interface;
+        $this->awareIdentifier = $awareIdentifier;
         $this->method = $method;
         $this->service = $service;
     }
@@ -49,9 +49,9 @@ class AwareInterfaceDefinition
      *
      * @return string
      */
-    public function getInterface()
+    public function getAwareIdentifier()
     {
-        return $this->interface;
+        return $this->awareIdentifier;
     }
 
     /**
@@ -59,9 +59,9 @@ class AwareInterfaceDefinition
      *
      * @param string $interface
      */
-    public function setInterface($interface)
+    public function setAwareIdentifier($interface)
     {
-        $this->interface = $interface;
+        $this->awareIdentifier = $interface;
     }
 
     /**
@@ -112,8 +112,8 @@ class AwareInterfaceDefinition
      */
     public function configureObject($serviceObject, ApplicationContainerBuilder $builder)
     {
-        if ($serviceObject instanceof $this->interface
-            || in_array(ltrim($this->interface, '\\'), class_uses($serviceObject))
+        if ($serviceObject instanceof $this->awareIdentifier
+            || in_array(ltrim($this->awareIdentifier, '\\'), class_uses($serviceObject))
         ) {
             call_user_func_array([$serviceObject, $this->method], [$builder->get($this->service)]);
         }

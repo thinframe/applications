@@ -1,7 +1,7 @@
 <?php
 
 /**
- * /src/ThinFrame/Applications/DependencyInjection/ApplicationContainerBuilder.php
+ * /src/DependencyInjection/ApplicationContainerBuilder.php
  *
  * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
@@ -32,9 +32,9 @@ class ApplicationContainerBuilder extends ContainerBuilder
      */
     private $loader;
     /**
-     * @var AwareInterfaceDefinition[]
+     * @var AwareDefinition[]
      */
-    private $awareInterfaceDefinitions = [];
+    private $awareDefinitions = [];
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ class ApplicationContainerBuilder extends ContainerBuilder
     public function get($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
     {
         $object = parent::get($id, $invalidBehavior);
-        foreach ($this->awareInterfaceDefinitions as $definition) {
+        foreach ($this->awareDefinitions as $definition) {
             $definition->configureObject($object, $this);
         }
         return $object;
@@ -66,11 +66,11 @@ class ApplicationContainerBuilder extends ContainerBuilder
     /**
      * Add aware interface definition
      *
-     * @param AwareInterfaceDefinition $definition
+     * @param AwareDefinition $definition
      */
-    public function addAwareInterfaceDefinition(AwareInterfaceDefinition $definition)
+    public function addAwareDefinition(AwareDefinition $definition)
     {
-        $this->awareInterfaceDefinitions[] = $definition;
+        $this->awareDefinitions[] = $definition;
     }
 
     /**

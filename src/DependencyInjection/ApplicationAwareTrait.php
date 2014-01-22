@@ -1,7 +1,7 @@
 <?php
 
 /**
- * /src/DependencyInjection/ApplicationAwareInterface.php
+ * /src/DependencyInjection/ApplicationAwareTrait.php
  *
  * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
@@ -12,19 +12,24 @@ namespace ThinFrame\Applications\DependencyInjection;
 use ThinFrame\Applications\AbstractApplication;
 
 /**
- * Interface ApplicationAwareInterface
- *
+ * Class ApplicationAwareTrait
  * @package ThinFrame\Applications\DependencyInjection
- * @since   0.2
+ * @since 0.2
  */
-interface ApplicationAwareInterface
+trait ApplicationAwareTrait
 {
     /**
-     * Attach application to current instance
+     * @var AbstractApplication
+     */
+    protected $application;
+
+    /**
+     * Attach application instance
      *
      * @param AbstractApplication $application
-     *
-     * @return mixed
      */
-    public function setApplication(AbstractApplication $application);
+    public function setApplication(AbstractApplication $application)
+    {
+        $this->application = $application;
+    }
 }

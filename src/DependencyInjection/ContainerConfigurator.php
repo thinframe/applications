@@ -1,7 +1,7 @@
 <?php
 
 /**
- * /src/ThinFrame/Applications/DependencyInjection/ContainerConfigurator.php
+ * /src/DependencyInjection/ContainerConfigurator.php
  *
  * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
@@ -23,9 +23,9 @@ use ThinFrame\Applications\DependencyInjection\Extensions\ConfigurationManager;
 class ContainerConfigurator
 {
     /**
-     * @var AwareInterfaceDefinition[]
+     * @var AwareDefinition[]
      */
-    private $awareInterfacesDefinitions = [];
+    private $awareDefinitions = [];
     /**
      * @var ExtensionInterface[]
      */
@@ -38,11 +38,11 @@ class ContainerConfigurator
     /**
      * Add aware interface definition
      *
-     * @param AwareInterfaceDefinition $definition
+     * @param AwareDefinition $definition
      */
-    public function addAwareInterfaceDefinition(AwareInterfaceDefinition $definition)
+    public function addAwareDefinition(AwareDefinition $definition)
     {
-        $this->awareInterfacesDefinitions[] = $definition;
+        $this->awareDefinitions[] = $definition;
     }
 
     /**
@@ -89,8 +89,8 @@ class ContainerConfigurator
         foreach ($this->getCompilerPasses() as $compilerPass) {
             $container->addCompilerPass($compilerPass);
         }
-        foreach ($this->getAwareInterfacesDefinitions() as $definition) {
-            $container->addAwareInterfaceDefinition($definition);
+        foreach ($this->getAwareDefinitions() as $definition) {
+            $container->addAwareDefinition($definition);
         }
     }
 
@@ -117,10 +117,10 @@ class ContainerConfigurator
     /**
      * Get all aware interface definitions
      *
-     * @return AwareInterfaceDefinition[]
+     * @return AwareDefinition[]
      */
-    public function getAwareInterfacesDefinitions()
+    public function getAwareDefinitions()
     {
-        return $this->awareInterfacesDefinitions;
+        return $this->awareDefinitions;
     }
 }

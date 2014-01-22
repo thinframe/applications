@@ -1,7 +1,7 @@
 <?php
 
 /**
- * /src/ThinFrame/Applications/AbstractApplication.php
+ * /src/AbstractApplication.php
  *
  * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
@@ -14,7 +14,7 @@ use PhpCollection\Sequence;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
-use ThinFrame\Applications\DependencyInjection\AwareInterfaceDefinition;
+use ThinFrame\Applications\DependencyInjection\AwareDefinition;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
 
 /**
@@ -63,16 +63,32 @@ abstract class AbstractApplication
 
         $this->containerConfigurator = new ContainerConfigurator();
 
-        $this->containerConfigurator->addAwareInterfaceDefinition(
-            new AwareInterfaceDefinition(
+        $this->containerConfigurator->addAwareDefinition(
+            new AwareDefinition(
                 '\ThinFrame\Applications\DependencyInjection\ApplicationAwareInterface',
                 'setApplication',
                 'application'
             )
         );
-        $this->containerConfigurator->addAwareInterfaceDefinition(
-            new AwareInterfaceDefinition(
+
+        $this->containerConfigurator->addAwareDefinition(
+            new AwareDefinition(
+                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareTrait',
+                'setApplication',
+                'application'
+            )
+        );
+
+        $this->containerConfigurator->addAwareDefinition(
+            new AwareDefinition(
                 '\Symfony\Component\DependencyInjection\ContainerAwareInterface',
+                'setContainer',
+                'container'
+            )
+        );
+        $this->containerConfigurator->addAwareDefinition(
+            new AwareDefinition(
+                '\ThinFrame\Applications\DependencyInjection\ContainerAwareTrait',
                 'setContainer',
                 'container'
             )
@@ -159,7 +175,7 @@ abstract class AbstractApplication
      * Configure Application container
      *
      * @param ApplicationContainerBuilder $container
-     * @param array                       $configuredApplications
+     * @param array $configuredApplications
      */
     public function configure(ApplicationContainerBuilder $container, $configuredApplications = [])
     {
