@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cd38fed9a13f196d8a4184654c3ae5df",
+    "hash": "1071f232856fa5c76d8e84b67efa02d4",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "a807c38edb33c1c527ac0df51c256909f62aa764"
+                "reference": "5d099bcf0393908bf4ad69cc47dafb785d51f7f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/a807c38edb33c1c527ac0df51c256909f62aa764",
-                "reference": "a807c38edb33c1c527ac0df51c256909f62aa764",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/5d099bcf0393908bf4ad69cc47dafb785d51f7f5",
+                "reference": "5d099bcf0393908bf4ad69cc47dafb785d51f7f5",
                 "shasum": ""
             },
             "require": {
@@ -151,21 +151,21 @@
                 "php",
                 "type"
             ],
-            "time": "2013-12-22 19:01:07"
+            "time": "2014-01-09 22:37:17"
         },
         {
             "name": "symfony/config",
-            "version": "dev-master",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "61b6bb7963508cfadedaf6ed2b04c6c9bd954156"
+                "reference": "27d0b35879ebefcfee6d218512c32ab2d6cd6a6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/61b6bb7963508cfadedaf6ed2b04c6c9bd954156",
-                "reference": "61b6bb7963508cfadedaf6ed2b04c6c9bd954156",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/27d0b35879ebefcfee6d218512c32ab2d6cd6a6a",
+                "reference": "27d0b35879ebefcfee6d218512c32ab2d6cd6a6a",
                 "shasum": ""
             },
             "require": {
@@ -175,7 +175,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -199,21 +199,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-26 16:42:52"
+            "time": "2014-01-01 08:14:50"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "dev-master",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "d618e810ac743b24a283baa2b9a61252e32c5123"
+                "reference": "7e5bde3a607dde1f8ddef5180759068ad53d259c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/d618e810ac743b24a283baa2b9a61252e32c5123",
-                "reference": "d618e810ac743b24a283baa2b9a61252e32c5123",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/7e5bde3a607dde1f8ddef5180759068ad53d259c",
+                "reference": "7e5bde3a607dde1f8ddef5180759068ad53d259c",
                 "shasum": ""
             },
             "require": {
@@ -232,7 +232,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -256,7 +256,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-12-19 10:11:05"
+            "time": "2014-01-01 09:02:49"
         },
         {
             "name": "symfony/filesystem",
@@ -265,12 +265,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "c136348f53ef538f1a3fa0b25b73c9c3bf223b31"
+                "reference": "e81f1b30eb9748c3f8e0de3a92ea210845cff0a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/c136348f53ef538f1a3fa0b25b73c9c3bf223b31",
-                "reference": "c136348f53ef538f1a3fa0b25b73c9c3bf223b31",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/e81f1b30eb9748c3f8e0de3a92ea210845cff0a9",
+                "reference": "e81f1b30eb9748c3f8e0de3a92ea210845cff0a9",
                 "shasum": ""
             },
             "require": {
@@ -303,21 +303,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-24 20:17:07"
+            "time": "2014-01-07 13:29:57"
         },
         {
             "name": "symfony/yaml",
-            "version": "dev-master",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "1481f096caead542c2dfadd67d9fd6124d97e273"
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/1481f096caead542c2dfadd67d9fd6124d97e273",
-                "reference": "1481f096caead542c2dfadd67d9fd6124d97e273",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
                 "shasum": ""
             },
             "require": {
@@ -326,7 +326,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -350,7 +350,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-26 16:42:52"
+            "time": "2013-12-28 08:12:03"
         },
         {
             "name": "thinframe/foundation",
@@ -358,12 +358,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thinframe/foundation.git",
-                "reference": "a6894d4afbcf33f04c7e8c7bde518c02153828ef"
+                "reference": "ea50c8b5259ffff65c65de32cfa16a05fe129bad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thinframe/foundation/zipball/a6894d4afbcf33f04c7e8c7bde518c02153828ef",
-                "reference": "a6894d4afbcf33f04c7e8c7bde518c02153828ef",
+                "url": "https://api.github.com/repos/thinframe/foundation/zipball/ea50c8b5259ffff65c65de32cfa16a05fe129bad",
+                "reference": "ea50c8b5259ffff65c65de32cfa16a05fe129bad",
                 "shasum": ""
             },
             "require": {
@@ -381,8 +381,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "": "src/"
+                "psr-4": {
+                    "ThinFrame\\Foundation\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -403,7 +403,7 @@
                 "foundation",
                 "thinframe"
             ],
-            "time": "2013-12-10 20:40:48"
+            "time": "2014-01-14 21:34:38"
         }
     ],
     "packages-dev": [
@@ -415,9 +415,9 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "thinframe/foundation": 20,
-        "symfony/dependency-injection": 20,
-        "symfony/yaml": 20,
-        "symfony/config": 20
+        "symfony/dependency-injection": 0,
+        "symfony/yaml": 0,
+        "symfony/config": 0
     },
     "platform": {
         "php": ">=5.4.0"
