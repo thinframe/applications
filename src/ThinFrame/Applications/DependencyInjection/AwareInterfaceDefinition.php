@@ -40,8 +40,8 @@ class AwareInterfaceDefinition
     public function __construct($interface, $method, $service)
     {
         $this->interface = $interface;
-        $this->method    = $method;
-        $this->service   = $service;
+        $this->method = $method;
+        $this->service = $service;
     }
 
     /**
@@ -112,7 +112,9 @@ class AwareInterfaceDefinition
      */
     public function configureObject($serviceObject, ApplicationContainerBuilder $builder)
     {
-        if ($serviceObject instanceof $this->interface) {
+        if ($serviceObject instanceof $this->interface
+            || in_array(ltrim($this->interface, '\\'), class_uses($serviceObject))
+        ) {
             call_user_func_array([$serviceObject, $this->method], [$builder->get($this->service)]);
         }
     }
