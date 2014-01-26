@@ -19,7 +19,7 @@ Each app contains it's own `container builder`, but when they are chained, the t
 * Application specific dependency injection container
 * Chained applications
 * Advanced configuration for S2DiC
-* Supports aware interfaces, so when you request a service, it will be automaticaly injected with the needed dependency.
+* Supports aware objects, so when you request a service, it will be automaticaly injected with the needed dependency.
 
 
 ##Installation:

@@ -13,10 +13,10 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "thinframe/foundation": "dev-master",
+        "thinframe/foundation": "@stable",
         "symfony/dependency-injection": "@stable",
         "symfony/yaml": "@stable",
         "symfony/config": "@stable"

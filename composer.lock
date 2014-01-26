@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1071f232856fa5c76d8e84b67efa02d4",
+    "hash": "8d1574a22be9cf434f090376e2a843fc",
     "packages": [
         {
             "name": "danielstjules/stringy",
-            "version": "1.2.2",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielstjules/Stringy.git",
-                "reference": "6ba29637b2b2bc8cfd735539c6f9716ae8957477"
+                "reference": "9f930262af66f3943cb5b8baa8cbc3e31bce0746"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/6ba29637b2b2bc8cfd735539c6f9716ae8957477",
-                "reference": "6ba29637b2b2bc8cfd735539c6f9716ae8957477",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/9f930262af66f3943cb5b8baa8cbc3e31bce0746",
+                "reference": "9f930262af66f3943cb5b8baa8cbc3e31bce0746",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "utility",
                 "utils"
             ],
-            "time": "2013-12-05 04:36:17"
+            "time": "2013-12-17 02:04:30"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -106,7 +106,7 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "dev-master",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
@@ -260,17 +260,17 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "dev-master",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "e81f1b30eb9748c3f8e0de3a92ea210845cff0a9"
+                "reference": "b3c3b5a8108b3e5d604dc23241b4ea84a067fc78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/e81f1b30eb9748c3f8e0de3a92ea210845cff0a9",
-                "reference": "e81f1b30eb9748c3f8e0de3a92ea210845cff0a9",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/b3c3b5a8108b3e5d604dc23241b4ea84a067fc78",
+                "reference": "b3c3b5a8108b3e5d604dc23241b4ea84a067fc78",
                 "shasum": ""
             },
             "require": {
@@ -279,7 +279,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -303,7 +303,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:29:57"
+            "time": "2013-12-31 13:43:26"
         },
         {
             "name": "symfony/yaml",
@@ -354,25 +354,25 @@
         },
         {
             "name": "thinframe/foundation",
-            "version": "dev-master",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thinframe/foundation.git",
-                "reference": "ea50c8b5259ffff65c65de32cfa16a05fe129bad"
+                "reference": "b95f50d5bcdec6c433e5b930e2b3e6724c21909b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thinframe/foundation/zipball/ea50c8b5259ffff65c65de32cfa16a05fe129bad",
-                "reference": "ea50c8b5259ffff65c65de32cfa16a05fe129bad",
+                "url": "https://api.github.com/repos/thinframe/foundation/zipball/b95f50d5bcdec6c433e5b930e2b3e6724c21909b",
+                "reference": "b95f50d5bcdec6c433e5b930e2b3e6724c21909b",
                 "shasum": ""
             },
             "require": {
-                "danielstjules/stringy": "1.2.*",
+                "danielstjules/stringy": "@stable",
                 "php": ">=5.4.0",
-                "phpcollection/phpcollection": "0.3.*"
+                "phpcollection/phpcollection": "@stable"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "extra": {
@@ -403,7 +403,7 @@
                 "foundation",
                 "thinframe"
             ],
-            "time": "2014-01-14 21:34:38"
+            "time": "2014-01-26 18:30:10"
         }
     ],
     "packages-dev": [
@@ -412,9 +412,9 @@
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
-        "thinframe/foundation": 20,
+        "thinframe/foundation": 0,
         "symfony/dependency-injection": 0,
         "symfony/yaml": 0,
         "symfony/config": 0
