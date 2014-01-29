@@ -16,6 +16,10 @@ use Symfony\Component\DependencyInjection\Definition;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\AwareDefinition;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
+use ThinFrame\Foundation\Exceptions\InvalidArgumentException;
+use ThinFrame\Foundation\Version\Version;
+use ThinFrame\Foundation\Version\VersionInterface;
+use ThinFrame\Pcntl\Helpers\Exec;
 
 /**
  * Class AbstractApplication
@@ -49,6 +53,11 @@ abstract class AbstractApplication
      * @var Map
      */
     private $metadata;
+
+    /**
+     * @var VersionInterface
+     */
+    private $version;
 
     /**
      * Constructor
@@ -97,6 +106,8 @@ abstract class AbstractApplication
         $this->initializeConfigurator($this->containerConfigurator);
 
         $this->containerBuilder = new ApplicationContainerBuilder(new FileLocator($this->getApplicationPath()));
+
+        $this->setUpVersion();
 
     }
 
@@ -168,6 +179,7 @@ abstract class AbstractApplication
             }
 
         }
+
         return $this->containerBuilder;
     }
 
@@ -175,7 +187,7 @@ abstract class AbstractApplication
      * Configure Application container
      *
      * @param ApplicationContainerBuilder $container
-     * @param array $configuredApplications
+     * @param array                       $configuredApplications
      */
     public function configure(ApplicationContainerBuilder $container, $configuredApplications = [])
     {
@@ -218,6 +230,7 @@ abstract class AbstractApplication
             $this->metadata = new Map();
             $this->processMetadata($this->metadata);
         }
+
         return $this->metadata;
     }
 
@@ -233,6 +246,7 @@ abstract class AbstractApplication
         $appMetadata->set('application_name', $this->getApplicationName());
         $appMetadata->set('application_path', $this->getApplicationPath());
         $appMetadata->set('application_namespace', $this->getNamespace());
+        $appMetadata->set('application_version', $this->getVersion());
 
         foreach ($this->getParentApplications() as $app) {
             $app->processMetadata($metadata);
@@ -262,5 +276,32 @@ abstract class AbstractApplication
     public function getNamespace()
     {
         return $this->reflector->getNamespaceName();
+    }
+
+    /**
+     * Get application version
+     *
+     * @return VersionInterface
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get version from git tag
+     */
+    private function setUpVersion()
+    {
+        $response = Exec::viaPipe('git describe', $this->getApplicationPath());
+        if ($response['exitStatus'] > 0) {
+            $this->version = new Version('0.0.0-dev');
+        } else {
+            try {
+                $this->version = new Version($response['stdOut']);
+            } catch (InvalidArgumentException $e) {
+                $this->version = new Version('0.0.0-dev');
+            }
+        }
     }
 }
