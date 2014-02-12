@@ -4,7 +4,6 @@ namespace ThinFrame\Applications\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -30,6 +29,11 @@ class ContainerConfigurator
     private $compilerPasses;
 
     /**
+     * @var \SplObjectStorage
+     */
+    private $injectionRules;
+
+    /**
      * @var array
      */
     private $resources = [];
@@ -46,6 +50,7 @@ class ContainerConfigurator
     {
         $this->extensions     = new \SplObjectStorage();
         $this->compilerPasses = new \SplObjectStorage();
+        $this->injectionRules = new \SplObjectStorage();
     }
 
     /**
@@ -62,10 +67,14 @@ class ContainerConfigurator
      * Add a new extension
      *
      * @param ExtensionInterface $extension
+     *
+     * @return $this
      */
     public function addExtension(ExtensionInterface $extension)
     {
         $this->extensions->attach($extension);
+
+        return $this;
     }
 
     /**
@@ -79,13 +88,41 @@ class ContainerConfigurator
     }
 
     /**
+     * Add injection rule
+     *
+     * @param InjectionRuleInterface $injectionRule
+     *
+     * @return $this
+     */
+    public function addInjectionRule(InjectionRuleInterface $injectionRule)
+    {
+        $this->injectionRules->attach($injectionRule);
+
+        return $this;
+    }
+
+    /**
+     * Get injection rules
+     *
+     * @return \SplObjectStorage
+     */
+    public function getInjectionRules()
+    {
+        return $this->injectionRules;
+    }
+
+    /**
      * Add a new compiler pass
      *
      * @param CompilerPassInterface $compilerPass
+     *
+     * @return $this
      */
     public function addCompilerPass(CompilerPassInterface $compilerPass)
     {
         $this->compilerPasses->attach($compilerPass);
+
+        return $this;
     }
 
     /**
@@ -124,12 +161,14 @@ class ContainerConfigurator
     /**
      * Configure container
      *
-     * @param ContainerBuilder $container
+     * @param ApplicationContainerBuilder $container
      */
-    public function configureContainer(ContainerBuilder $container)
+    public function configureContainer(ApplicationContainerBuilder $container)
     {
         array_walk(iterator_to_array($this->extensions), [$container, 'registerExtension']);
         array_walk(iterator_to_array($this->compilerPasses), [$container, 'addCompilerPass']);
+
+        $container->setInjectionRules($this->injectionRules);
 
         $this->resources = array_reverse($this->resources, true);
 

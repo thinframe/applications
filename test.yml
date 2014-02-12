@@ -1,3 +1,3 @@
 services:
     test:
-        class: 'SplObjectStorage'
+        class: 'Testing\Test'

@@ -4,6 +4,8 @@ namespace ThinFrame\Applications;
 
 use PhpCollection\Map;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
 use ThinFrame\Foundation\Exceptions\InvalidArgumentException;
 use ThinFrame\Foundation\Exceptions\RuntimeException;
@@ -37,7 +39,7 @@ abstract class AbstractApplication
     private $ready = false;
 
     /**
-     * @var ContainerBuilder
+     * @var ApplicationContainerBuilder
      */
     private $container;
 
@@ -80,9 +82,15 @@ abstract class AbstractApplication
                 $application->setMetadata($this->metadata[$application->getName()]);
             }
 
-            $this->container = new ContainerBuilder();
+            $this->container = new ApplicationContainerBuilder();
 
             $this->configurator->configureContainer($this->container);
+
+            $definition = new Definition();
+            $definition->setSynthetic(true);
+            //inserting container as service
+            $this->container->setDefinition('container', $definition);
+            $this->container->set('container', $this->container);
 
             $this->container->compile();
 
