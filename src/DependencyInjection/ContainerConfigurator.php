@@ -1,103 +1,77 @@
 <?php
 
-/**
- * /src/DependencyInjection/ContainerConfigurator.php
- *
- * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
- * @license   MIT license (see the license file in the root directory)
- */
-
 namespace ThinFrame\Applications\DependencyInjection;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use ThinFrame\Applications\DependencyInjection\Extensions\AbstractConfigurationManager;
-use ThinFrame\Applications\DependencyInjection\Extensions\ConfigurationManager;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use ThinFrame\Applications\AbstractApplication;
+use ThinFrame\Foundation\Exceptions\RuntimeException;
 
 /**
- * ContainerConfigurator - configure container builder with extensions and compiler passes
+ * Class ContainerConfigurator
  *
  * @package ThinFrame\Applications\DependencyInjection
- * @since   0.2
+ * @since   0.3
  */
 class ContainerConfigurator
 {
     /**
-     * @var AwareDefinition[]
+     * @var \SplObjectStorage
      */
-    private $awareDefinitions = [];
+    private $extensions;
     /**
-     * @var ExtensionInterface[]
+     * @var \SplObjectStorage
      */
-    private $extensions = [];
-    /**
-     * @var CompilerPassInterface[]
-     */
-    private $compilerPasses = [];
+    private $compilerPasses;
 
     /**
-     * Add aware interface definition
-     *
-     * @param AwareDefinition $definition
+     * @var array
      */
-    public function addAwareDefinition(AwareDefinition $definition)
+    private $resources = [];
+
+    /**
+     * @var AbstractApplication
+     */
+    private $currentApplication;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        $this->awareDefinitions[] = $definition;
+        $this->extensions     = new \SplObjectStorage();
+        $this->compilerPasses = new \SplObjectStorage();
     }
 
     /**
-     * Add configurator
+     * Set current application
      *
-     * @param ConfigurationManager $configurator
+     * @param AbstractApplication $application
      */
-    public function addConfigurationManager(ConfigurationManager $configurator)
+    public function setCurrentApplication(AbstractApplication $application)
     {
-        $this->addExtension($configurator);
-        $this->addCompilerPass($configurator);
+        $this->currentApplication = $application;
     }
 
     /**
-     * Add extension
+     * Add a new extension
      *
      * @param ExtensionInterface $extension
      */
     public function addExtension(ExtensionInterface $extension)
     {
-        $this->extensions[] = $extension;
+        $this->extensions->attach($extension);
     }
 
     /**
-     * Add compiler pass
+     * Get extensions storage
      *
-     * @param CompilerPassInterface $compilerPass
-     */
-    public function addCompilerPass(CompilerPassInterface $compilerPass)
-    {
-        $this->compilerPasses[] = $compilerPass;
-    }
-
-    /**
-     * Configure container
-     *
-     * @param ApplicationContainerBuilder $container
-     */
-    public function configureContainer(ApplicationContainerBuilder $container)
-    {
-        foreach ($this->getExtensions() as $extension) {
-            $container->registerExtension($extension);
-        }
-        foreach ($this->getCompilerPasses() as $compilerPass) {
-            $container->addCompilerPass($compilerPass);
-        }
-        foreach ($this->getAwareDefinitions() as $definition) {
-            $container->addAwareDefinition($definition);
-        }
-    }
-
-    /**
-     * Get all extensions
-     *
-     * @return ExtensionInterface[]
+     * @return \SplObjectStorage
      */
     public function getExtensions()
     {
@@ -105,9 +79,19 @@ class ContainerConfigurator
     }
 
     /**
-     * Get all compiler passes
+     * Add a new compiler pass
      *
-     * @return CompilerPassInterface[]
+     * @param CompilerPassInterface $compilerPass
+     */
+    public function addCompilerPass(CompilerPassInterface $compilerPass)
+    {
+        $this->compilerPasses->attach($compilerPass);
+    }
+
+    /**
+     * Get compiler passes
+     *
+     * @return \SplObjectStorage
      */
     public function getCompilerPasses()
     {
@@ -115,12 +99,62 @@ class ContainerConfigurator
     }
 
     /**
-     * Get all aware interface definitions
+     * Add resource
      *
-     * @return AwareDefinition[]
+     * @param string $resourcePath
      */
-    public function getAwareDefinitions()
+    public function addResource($resourcePath)
     {
-        return $this->awareDefinitions;
+        if (!isset($this->resources[$this->currentApplication->getPath()])) {
+            $this->resources[$this->currentApplication->getPath()] = [];
+        }
+        $this->resources[$this->currentApplication->getPath()][] = $resourcePath;
+    }
+
+    /**
+     * Add resources
+     *
+     * @param array $resources
+     */
+    public function addResources(array $resources)
+    {
+        array_walk($resources, [$this, 'addResource']);
+    }
+
+    /**
+     * Configure container
+     *
+     * @param ContainerBuilder $container
+     */
+    public function configureContainer(ContainerBuilder $container)
+    {
+        array_walk(iterator_to_array($this->extensions), [$container, 'registerExtension']);
+        array_walk(iterator_to_array($this->compilerPasses), [$container, 'addCompilerPass']);
+
+        $this->resources = array_reverse($this->resources, true);
+
+        foreach ($this->resources as $basePath => $resources) {
+            $fileLocator = new FileLocator($basePath);
+            array_walk(
+                array_reverse($resources),
+                function ($resourcePath) use ($fileLocator, $container) {
+                    $loader = null;
+                    switch (pathinfo($resourcePath, PATHINFO_EXTENSION)) {
+                        case 'yml':
+                            $loader = new YamlFileLoader($container, $fileLocator);
+                            break;
+                        case 'xml':
+                            $loader = new XmlFileLoader($container, $fileLocator);
+                            break;
+                        case 'php':
+                            $loader = new PhpFileLoader($container, $fileLocator);
+                            break;
+                        default:
+                            throw new RuntimeException('Resource type not supported: ' . $resourcePath);
+                    }
+                    $loader->load($resourcePath);
+                }
+            );
+        }
     }
 }

@@ -1,0 +1,3 @@
+services:
+    test:
+        class: 'ThinFrame\Applications\DependencyInjection\ContainerConfigurator'

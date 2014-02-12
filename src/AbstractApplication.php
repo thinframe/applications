@@ -1,241 +1,162 @@
 <?php
 
-/**
- * /src/AbstractApplication.php
- *
- * @copyright 2013 Sorin Badea <sorin.badea91@gmail.com>
- * @license   MIT license (see the license file in the root directory)
- */
-
 namespace ThinFrame\Applications;
 
 use PhpCollection\Map;
-use PhpCollection\Sequence;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
-use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
-use ThinFrame\Applications\DependencyInjection\AwareDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
+use ThinFrame\Foundation\Exceptions\InvalidArgumentException;
+use ThinFrame\Foundation\Exceptions\RuntimeException;
 
 /**
  * Class AbstractApplication
  *
  * @package ThinFrame\Applications
- * @since   0.2
+ * @since   0.3
  */
 abstract class AbstractApplication
 {
     /**
      * @var \ReflectionClass
      */
-    private $reflector;
+    protected $reflector;
+
+    /**
+     * @var \SplObjectStorage
+     */
+    private $applications;
+
     /**
      * @var ContainerConfigurator
      */
-    private $containerConfigurator;
-    /**
-     * @var Sequence<AbstractApplication>
-     */
-    private $parentApplications;
-    /**
-     * @var ApplicationContainerBuilder
-     */
-    private $containerBuilder;
+    private $configurator;
+
     /**
      * @var bool
      */
-    private $containerBuilderCompiled = false;
+    private $ready = false;
+
     /**
-     * @var Map
+     * @var ContainerBuilder
      */
-    private $metadata;
+    private $container;
+
+    /**
+     * @var Map[]
+     */
+    private $metadata = [];
 
     /**
      * Constructor
      */
-    public function __construct()
+    function __construct()
     {
-        $this->reflector = new \ReflectionClass(get_called_class());
-
-        $this->parentApplications = new Sequence();
-
-        $this->parentApplications = $this->getParentApplications();
-
-        $this->containerConfigurator = new ContainerConfigurator();
-
-        $this->containerConfigurator->addAwareDefinition(
-            new AwareDefinition(
-                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareInterface',
-                'setApplication',
-                'application'
-            )
-        );
-
-        $this->containerConfigurator->addAwareDefinition(
-            new AwareDefinition(
-                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareTrait',
-                'setApplication',
-                'application'
-            )
-        );
-
-        $this->containerConfigurator->addAwareDefinition(
-            new AwareDefinition(
-                '\Symfony\Component\DependencyInjection\ContainerAwareInterface',
-                'setContainer',
-                'container'
-            )
-        );
-        $this->containerConfigurator->addAwareDefinition(
-            new AwareDefinition(
-                '\ThinFrame\Applications\DependencyInjection\ContainerAwareTrait',
-                'setContainer',
-                'container'
-            )
-        );
-
-        $this->initializeConfigurator($this->containerConfigurator);
-
-        $this->containerBuilder = new ApplicationContainerBuilder(new FileLocator($this->getApplicationPath()));
-
+        $this->reflector    = new \ReflectionClass($this);
+        $this->applications = new \SplObjectStorage();
+        $this->configurator = new ContainerConfigurator();
     }
 
     /**
-     * Get parent applications
+     * Build application structure
      *
-     * @return AbstractApplication[]
+     * @return $this
      */
-    abstract protected function getParentApplications();
+    public function make()
+    {
+        if (!$this->ready) {
+
+            $this->unifyApplications($this);
+
+            foreach ($this->applications as $application) {
+                $this->configurator->setCurrentApplication($application);
+                /* @var $application AbstractApplication */
+                $application->setConfiguration($this->configurator);
+
+                $this->metadata[$application->getName()] = new Map();
+
+                $this->metadata[$application->getName()]->set('namespace', $application->getNamespace());
+                $this->metadata[$application->getName()]->set('path', $application->getPath());
+
+                $application->setMetadata($this->metadata[$application->getName()]);
+            }
+
+            $this->container = new ContainerBuilder();
+
+            $this->configurator->configureContainer($this->container);
+
+            $this->container->compile();
+
+            $this->ready = true;
+        }
+
+
+        return $this;
+    }
 
     /**
-     * initialize configurator
-     *
-     * @param ContainerConfigurator $configurator
-     *
-     * @return mixed
-     */
-    abstract public function initializeConfigurator(ContainerConfigurator $configurator);
-
-    /**
-     * Get application path
+     * Get application base path
      *
      * @return string
      */
-    public function getApplicationPath()
+    public function getPath()
     {
         return dirname($this->reflector->getFileName());
     }
 
     /**
-     * @param array $loadedApplications
+     * Get application namespace
      *
-     * @return ApplicationContainerBuilder
+     * @return string
      */
-    public function getApplicationContainer(&$loadedApplications = array())
+    public function getNamespace()
     {
-        if (!$this->containerBuilderCompiled) {
-            if (count($loadedApplications) == 0) {
-                $parent = true;
-            } else {
-                $parent = false;
-            }
-            foreach ($this->parentApplications as $app) {
-                if (in_array(get_class($app), $loadedApplications)) {
-                    continue;
-                }
-                $loadedApplications[] = get_class($app);
-                $this->containerBuilder->merge($app->getApplicationContainer($loadedApplications));
-            }
-
-            $this->configure($this->containerBuilder);
-
-            foreach ($this->getConfigurationFiles() as $file) {
-                $this->containerBuilder->import($file);
-            }
-            if ($parent) {
-                //setting syntetic services
-                $definition = new Definition();
-                $definition->setSynthetic(true);
-                //inserting container as service
-                $this->containerBuilder->setDefinition('container', $definition);
-                $this->containerBuilder->set('container', $this->containerBuilder);
-
-                //inserting application as service
-                $this->containerBuilder->setDefinition('application', clone $definition);
-                $this->containerBuilder->set('application', $this);
-
-                $this->containerBuilder->compile();
-            }
-
-        }
-        return $this->containerBuilder;
+        return $this->reflector->getNamespaceName();
     }
-
-    /**
-     * Configure Application container
-     *
-     * @param ApplicationContainerBuilder $container
-     * @param array $configuredApplications
-     */
-    public function configure(ApplicationContainerBuilder $container, $configuredApplications = [])
-    {
-        foreach ($this->parentApplications as $application) {
-            if (in_array(get_class($application), $configuredApplications)) {
-                continue;
-            }
-            $configuredApplications[] = get_class($application);
-            /* @var $application AbstractApplication */
-            $application->configure($container, $configuredApplications);
-        }
-        $this->getContainerConfigurator()->configureContainer($container);
-    }
-
-    /**
-     * Get container configurator
-     *
-     * @return ContainerConfigurator
-     */
-    public function getContainerConfigurator()
-    {
-        return $this->containerConfigurator;
-    }
-
-    /**
-     * Get configuration files
-     *
-     * @return mixed
-     */
-    abstract public function getConfigurationFiles();
 
     /**
      * Get application metadata
      *
-     * @return Map
+     * @return \PhpCollection\Map[]
      */
     public function getMetadata()
     {
-        if (is_null($this->metadata)) {
-            $this->metadata = new Map();
-            $this->processMetadata($this->metadata);
-        }
         return $this->metadata;
     }
 
     /**
-     * Process application metadata
+     * Get container
      *
-     * @param Map $metadata
+     * @return ContainerBuilder
+     * @throws \ThinFrame\Foundation\Exceptions\RuntimeException
      */
-    public function processMetadata(Map &$metadata)
+    public function getContainer()
     {
-        $metadata->set($this->getApplicationName(), $appMetadata = new Map($this->metaData()));
+        if ($this->ready) {
+            return $this->container;
+        }
+        throw new RuntimeException('The container wasn\'t compiled. Please run make() first');
+    }
 
-        $appMetadata->set('application_name', $this->getApplicationName());
-        $appMetadata->set('application_path', $this->getApplicationPath());
-        $appMetadata->set('application_namespace', $this->getNamespace());
+    /**
+     * Unify parent applications tree into a spl object storage for easier manipulation
+     *
+     * @param AbstractApplication $currentApplication
+     * @param array               $loadedApplications
+     *
+     * @throws \ThinFrame\Foundation\Exceptions\InvalidArgumentException
+     */
+    private function unifyApplications(AbstractApplication $currentApplication, &$loadedApplications = [])
+    {
+        $this->applications->attach($currentApplication);
+        $loadedApplications[] = get_class($currentApplication);
 
-        foreach ($this->getParentApplications() as $app) {
-            $app->processMetadata($metadata);
+        foreach ((array)$currentApplication->getParents() as $parentApplication) {
+            if (!is_object($parentApplication) || !($parentApplication instanceof AbstractApplication)) {
+                throw new InvalidArgumentException('Invalid parent application provided');
+            }
+            if (!in_array(get_class($parentApplication), $loadedApplications)) {
+                $this->unifyApplications($parentApplication, $loadedApplications);
+            }
         }
     }
 
@@ -244,23 +165,27 @@ abstract class AbstractApplication
      *
      * @return string
      */
-    abstract public function getApplicationName();
+    abstract public function getName();
 
     /**
-     * Get package metadata
-     */
-    protected function metaData()
-    {
-        return [];
-    }
-
-    /**
-     * Get namespace
+     * Get application parents
      *
-     * @return string
+     * @return AbstractApplication[]
      */
-    public function getNamespace()
-    {
-        return $this->reflector->getNamespaceName();
-    }
+    abstract public function getParents();
+
+    /**
+     * Set different options for the container configurator
+     *
+     * @param ContainerConfigurator $configurator
+     */
+    abstract protected function setConfiguration(ContainerConfigurator $configurator);
+
+    /**
+     * Set application metadata
+     *
+     * @param Map $metadata
+     *
+     */
+    abstract protected function setMetadata(Map $metadata);
 }
