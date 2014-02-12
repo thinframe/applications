@@ -13,10 +13,10 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "thinframe/foundation": "@stable",
+        "thinframe/foundation": "dev-develop",
         "symfony/dependency-injection": "@stable",
         "symfony/yaml": "@stable",
         "symfony/config": "@stable"
@@ -24,6 +24,12 @@
     "autoload": {
         "psr-4": {
             "ThinFrame\\Applications\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2-dev",
+            "dev-develop": "0.3-dev"
         }
     }
 }
