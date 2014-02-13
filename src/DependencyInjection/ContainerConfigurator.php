@@ -180,7 +180,9 @@ class ContainerConfigurator
      */
     public function configureContainer(ApplicationContainerBuilder $container)
     {
-        array_walk(iterator_to_array($this->extensions), [$container, 'registerExtension']);
+        foreach ($this->extensions as $extension) {
+            $container->registerExtension($extension);
+        }
 
         foreach ($this->compilerPasses as $compilerPass) {
             $container->addCompilerPass($compilerPass);
