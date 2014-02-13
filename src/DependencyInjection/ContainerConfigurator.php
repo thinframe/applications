@@ -181,7 +181,10 @@ class ContainerConfigurator
     public function configureContainer(ApplicationContainerBuilder $container)
     {
         array_walk(iterator_to_array($this->extensions), [$container, 'registerExtension']);
-        array_walk(iterator_to_array($this->compilerPasses), [$container, 'addCompilerPass']);
+
+        foreach ($this->compilerPasses as $compilerPass) {
+            $container->addCompilerPass($compilerPass);
+        }
 
         $container->setInjectionRules($this->injectionRules);
 
