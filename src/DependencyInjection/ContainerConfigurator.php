@@ -194,10 +194,12 @@ class ContainerConfigurator
 
         foreach ($this->resources as $basePath => $resources) {
             $fileLocator = new FileLocator($basePath);
+            $resource    = array_reverse($resources);
             array_walk(
-                array_reverse($resources),
+                $resources,
                 function ($resourcePath) use ($fileLocator, $container) {
-                    switch (pathinfo($resourcePath, PATHINFO_EXTENSION)) {
+                    $extension = pathinfo($resourcePath, PATHINFO_EXTENSION);
+                    switch ($extension) {
                         case 'yml':
                             $loader = new YamlFileLoader($container, $fileLocator);
                             break;
