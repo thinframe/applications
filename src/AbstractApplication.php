@@ -95,9 +95,13 @@ abstract class AbstractApplication
 
             $definition = new Definition();
             $definition->setSynthetic(true);
+
             //inserting container as service
             $this->container->setDefinition('container', $definition);
+            $this->container->setDefinition('application', clone $definition);
+
             $this->container->set('container', $this->container);
+            $this->container->set('application', $this);
 
             $this->container->compile();
 
@@ -132,9 +136,14 @@ abstract class AbstractApplication
      * Get application metadata
      *
      * @return \PhpCollection\Map[]
+     * @throws RuntimeException
      */
     public function getMetadata()
     {
+        if (!$this->ready) {
+            throw new RuntimeException('The container wasn\'t compiled. Please run make() first');
+        }
+
         return $this->metadata;
     }
 
@@ -142,7 +151,7 @@ abstract class AbstractApplication
      * Get container
      *
      * @return ContainerBuilder
-     * @throws \ThinFrame\Foundation\Exceptions\RuntimeException
+     * @throws RuntimeException
      */
     public function getContainer()
     {

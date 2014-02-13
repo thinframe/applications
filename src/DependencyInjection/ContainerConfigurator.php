@@ -146,6 +146,8 @@ class ContainerConfigurator
      * Add resource
      *
      * @param string $resourcePath
+     *
+     * @return $this
      */
     public function addResource($resourcePath)
     {
@@ -153,16 +155,22 @@ class ContainerConfigurator
             $this->resources[$this->currentApplication->getPath()] = [];
         }
         $this->resources[$this->currentApplication->getPath()][] = $resourcePath;
+
+        return $this;
     }
 
     /**
      * Add resources
      *
      * @param array $resources
+     *
+     * @return $this
      */
     public function addResources(array $resources)
     {
         array_walk($resources, [$this, 'addResource']);
+
+        return $this;
     }
 
     /**
@@ -184,7 +192,6 @@ class ContainerConfigurator
             array_walk(
                 array_reverse($resources),
                 function ($resourcePath) use ($fileLocator, $container) {
-                    $loader = null;
                     switch (pathinfo($resourcePath, PATHINFO_EXTENSION)) {
                         case 'yml':
                             $loader = new YamlFileLoader($container, $fileLocator);
