@@ -47,12 +47,17 @@ class ApplicationContainerBuilder extends ContainerBuilder
     {
         $service = parent::get($id, $invalidBehavior);
 
-        foreach ($this->injectionRules as $injectionRule) {
-            /* @var $injectionRule InjectionRuleInterface */
-            if ($injectionRule->isValid($service)) {
-                $injectionRule->inject($this, $service);
+        $injectionRules = iterator_to_array($this->injectionRules);
+        $that = $this;
+
+        array_walk(
+            $injectionRules,
+            function (InjectionRuleInterface $injectionRule) use ($service, $that) {
+                if ($injectionRule->isValid($service)) {
+                    $injectionRule->inject($that, $service);
+                }
             }
-        }
+        );
 
         return $service;
     }
