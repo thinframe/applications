@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
+use ThinFrame\Applications\DependencyInjection\InterfaceInjectionRule;
+use ThinFrame\Applications\DependencyInjection\TraitInjectionRule;
 use ThinFrame\Foundation\Exceptions\InvalidArgumentException;
 use ThinFrame\Foundation\Exceptions\RuntimeException;
 
@@ -63,6 +65,38 @@ abstract class AbstractApplication
         $this->reflector    = new \ReflectionClass($this);
         $this->applications = new \SplObjectStorage();
         $this->configurator = new ContainerConfigurator();
+
+        $this->configurator->addInjectionRule(
+            new TraitInjectionRule(
+                '\Symfony\Component\DependencyInjection\ContainerAwareTrait',
+                'container',
+                'setContainer'
+            )
+        );
+
+        $this->configurator->addInjectionRule(
+            new InterfaceInjectionRule(
+                '\Symfony\Component\DependencyInjection\ContainerAwareInterface',
+                'container',
+                'setContainer'
+            )
+        );
+
+        $this->configurator->addInjectionRule(
+            new TraitInjectionRule(
+                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareTrait',
+                'application',
+                'setApplication'
+            )
+        );
+
+        $this->configurator->addInjectionRule(
+            new InterfaceInjectionRule(
+                '\ThinFrame\Applications\DependencyInjection\ApplicationAwareInterface',
+                'application',
+                'setApplication'
+            )
+        );
     }
 
     /**
