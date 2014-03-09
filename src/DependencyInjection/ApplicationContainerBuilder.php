@@ -1,8 +1,6 @@
 <?php
 
 /**
- * src/DependencyInjection/ApplicationContainerBuilder.php
- *
  * @author    Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
  */
@@ -13,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ApplicationContainerBuilder
+ * ApplicationContainerBuilder - ContainerBuilder with some extra features
  *
  * @package ThinFrame\Applications\DependencyInjection
  * @since   0.3
@@ -43,12 +41,12 @@ class ApplicationContainerBuilder extends ContainerBuilder
     /**
      * {@inheritdoc}
      */
-    public function get($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
+    public function get($serviceID, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
     {
-        $service = parent::get($id, $invalidBehavior);
+        $service = parent::get($serviceID, $invalidBehavior);
 
         $injectionRules = iterator_to_array($this->injectionRules);
-        $that = $this;
+        $that           = $this;
 
         array_walk(
             $injectionRules,

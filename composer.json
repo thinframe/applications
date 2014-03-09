@@ -17,9 +17,9 @@
     "require": {
         "php": ">=5.4.0",
         "thinframe/foundation": "dev-develop",
-        "symfony/dependency-injection": "@stable",
-        "symfony/yaml": "@stable",
-        "symfony/config": "@stable"
+        "symfony/dependency-injection": "2.4.2",
+        "symfony/yaml": "2.4.2",
+        "symfony/config": "2.4.2"
     },
     "autoload": {
         "psr-4": {

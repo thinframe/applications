@@ -1,8 +1,6 @@
 <?php
 
 /**
- * src/DependencyInjection/ContainerConfigurator.php
- *
  * @author    Sorin Badea <sorin.badea91@gmail.com>
  * @license   MIT license (see the license file in the root directory)
  */
@@ -19,7 +17,7 @@ use ThinFrame\Applications\AbstractApplication;
 use ThinFrame\Foundation\Exception\RuntimeException;
 
 /**
- * Class ContainerConfigurator
+ * ContainerConfigurator - Class that is used to configure a ApplicationContainerBuilder
  *
  * @package ThinFrame\Applications\DependencyInjection
  * @since   0.3
@@ -194,7 +192,7 @@ class ContainerConfigurator
 
         foreach ($this->resources as $basePath => $resources) {
             $fileLocator = new FileLocator($basePath);
-            $resource    = array_reverse($resources);
+            $resources   = array_reverse($resources);
             array_walk(
                 $resources,
                 function ($resourcePath) use ($fileLocator, $container) {
