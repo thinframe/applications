@@ -48,12 +48,12 @@ abstract class AbstractApplication
     /**
      * @var ApplicationContainerBuilder
      */
-    private $container;
+    protected $container;
 
     /**
      * @var Map[]
      */
-    private $metadata = [];
+    protected $metadata = [];
 
     /**
      * Constructor
@@ -63,6 +63,7 @@ abstract class AbstractApplication
         $this->reflector    = new \ReflectionClass($this);
         $this->applications = new \SplObjectStorage();
         $this->configurator = new ContainerConfigurator();
+        $this->container    = new ApplicationContainerBuilder();
 
         $this->configurator->addInjectionRule(
             new TraitInjectionRule(
@@ -120,8 +121,6 @@ abstract class AbstractApplication
 
                 $application->setMetadata($this->metadata[$application->getName()]);
             }
-
-            $this->container = new ApplicationContainerBuilder();
 
             $this->configurator->configureContainer($this->container);
 
