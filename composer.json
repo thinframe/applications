@@ -19,7 +19,9 @@
         "thinframe/foundation": "dev-develop",
         "symfony/dependency-injection": "2.4.2",
         "symfony/yaml": "2.4.2",
-        "symfony/config": "2.4.2"
+        "symfony/config": "2.4.2",
+        "knplabs/gaufrette": "0.1.7"
+
     },
     "autoload": {
         "psr-4": {

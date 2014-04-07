@@ -7,6 +7,8 @@
 
 namespace ThinFrame\Applications;
 
+use Gaufrette\Filesystem;
+use Gaufrette\StreamWrapper;
 use PhpCollection\Map;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -16,6 +18,7 @@ use ThinFrame\Applications\DependencyInjection\InterfaceInjectionRule;
 use ThinFrame\Applications\DependencyInjection\TraitInjectionRule;
 use ThinFrame\Foundation\Exception\InvalidArgumentException;
 use ThinFrame\Foundation\Exception\RuntimeException;
+use Gaufrette\Adapter\Local as LocalAdaptor;
 
 /**
  * Class AbstractApplication
@@ -25,6 +28,7 @@ use ThinFrame\Foundation\Exception\RuntimeException;
  */
 abstract class AbstractApplication
 {
+    protected static $STREAM_PROTOCOL = 'thinframe';
     /**
      * @var \ReflectionClass
      */
@@ -56,6 +60,11 @@ abstract class AbstractApplication
     protected $metadata = [];
 
     /**
+     * @var \Gaufrette\FilesystemMap
+     */
+    private $fileSystemMap;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -64,7 +73,15 @@ abstract class AbstractApplication
         $this->applications = new \SplObjectStorage();
         $this->configurator = new ContainerConfigurator();
         $this->container    = new ApplicationContainerBuilder();
+        $this->setDefaultInjectionRules();
+        $this->fileSystemMap = StreamWrapper::getFilesystemMap();
+    }
 
+    /**
+     * Set default injection rules
+     */
+    private function setDefaultInjectionRules()
+    {
         $this->configurator->addInjectionRule(
             new TraitInjectionRule(
                 '\Symfony\Component\DependencyInjection\ContainerAwareTrait',
@@ -110,17 +127,26 @@ abstract class AbstractApplication
             $this->unifyApplications($this);
 
             foreach ($this->applications as $application) {
+                //set up virtual file system
+                $this->setUpFileSystem($application);
+
                 $this->configurator->setCurrentApplication($application);
                 /* @var $application AbstractApplication */
                 $application->setConfiguration($this->configurator);
 
                 $this->metadata[$application->getName()] = new Map();
 
-                $this->metadata[$application->getName()]->set('namespace', $application->getNamespace());
-                $this->metadata[$application->getName()]->set('path', $application->getPath());
+                $appName = $application->getName();
 
-                $application->setMetadata($this->metadata[$application->getName()]);
+                $this->metadata[$appName]->set('namespace', $application->getNamespace());
+                $this->metadata[$appName]->set('path', $application->getPath());
+                $this->metadata[$appName]->set('virtual_path', $application->getVirtualPath());
+                $this->metadata[$appName]->set('file_system', $this->fileSystemMap->get($appName));
+
+                $application->setMetadata($this->metadata[$appName]);
             }
+
+            StreamWrapper::register(static::$STREAM_PROTOCOL);
 
             $this->configurator->configureContainer($this->container);
 
@@ -141,6 +167,16 @@ abstract class AbstractApplication
 
 
         return $this;
+    }
+
+    /**
+     * Set up file system
+     *
+     * @param AbstractApplication $application
+     */
+    private function setUpFileSystem(AbstractApplication $application)
+    {
+        $this->fileSystemMap->set($this->getName(), new Filesystem(new LocalAdaptor($application->getPath())));
     }
 
     /**
@@ -213,6 +249,16 @@ abstract class AbstractApplication
                 $this->unifyApplications($parentApplication, $loadedApplications);
             }
         }
+    }
+
+    /**
+     * Get application virtual path
+     *
+     * @return string
+     */
+    public function getVirtualPath()
+    {
+        return sprintf('%s://%s/', static::$STREAM_PROTOCOL, $this->getName());
     }
 
     /**
