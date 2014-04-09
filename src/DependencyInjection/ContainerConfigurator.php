@@ -149,10 +149,10 @@ class ContainerConfigurator
      */
     public function addResource($resourcePath)
     {
-        if (!isset($this->resources[$this->currentApplication->getVirtualPath()])) {
-            $this->resources[$this->currentApplication->getVirtualPath()] = [];
+        if (!isset($this->resources[$this->currentApplication->getPath()])) {
+            $this->resources[$this->currentApplication->getPath()] = [];
         }
-        $this->resources[$this->currentApplication->getVirtualPath()][] = $resourcePath;
+        $this->resources[$this->currentApplication->getPath()][] = $resourcePath;
 
         return $this;
     }
