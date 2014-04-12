@@ -188,11 +188,9 @@ class ContainerConfigurator
 
         $container->setInjectionRules($this->injectionRules);
 
-        $this->resources = array_reverse($this->resources, true);
-
         foreach ($this->resources as $basePath => $resources) {
             $fileLocator = new FileLocator($basePath);
-            $resources   = array_reverse($resources);
+
             array_walk(
                 $resources,
                 function ($resourcePath) use ($fileLocator, $container) {
