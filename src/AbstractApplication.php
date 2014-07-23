@@ -14,8 +14,8 @@ use ThinFrame\Applications\DependencyInjection\ApplicationContainerBuilder;
 use ThinFrame\Applications\DependencyInjection\ContainerConfigurator;
 use ThinFrame\Applications\DependencyInjection\InterfaceInjectionRule;
 use ThinFrame\Applications\DependencyInjection\TraitInjectionRule;
-use ThinFrame\Foundation\Exception\InvalidArgumentException;
-use ThinFrame\Foundation\Exception\RuntimeException;
+use ThinFrame\Foundation\Common\Exception\InvalidArgumentException;
+use ThinFrame\Foundation\Common\Exception\RuntimeException;
 
 /**
  * Class AbstractApplication
@@ -198,7 +198,7 @@ abstract class AbstractApplication
      * @param AbstractApplication $currentApplication
      * @param array               $loadedApplications
      *
-     * @throws \ThinFrame\Foundation\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function unifyApplications(AbstractApplication $currentApplication, &$loadedApplications = [])
     {

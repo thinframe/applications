@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use ThinFrame\Applications\AbstractApplication;
-use ThinFrame\Foundation\Exception\RuntimeException;
+use ThinFrame\Foundation\Common\Exception\RuntimeException;
 
 /**
  * ContainerConfigurator - Class that is used to configure a ApplicationContainerBuilder
