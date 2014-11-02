@@ -16,10 +16,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "thinframe/foundation": "dev-develop",
-        "symfony/dependency-injection": "2.4.2",
-        "symfony/yaml": "2.4.2",
-        "symfony/config": "2.4.2"
+        "thinframe/foundation": "0.3.*",
+        "symfony/dependency-injection": "2.6.*",
+        "symfony/yaml": "2.6.*",
+        "symfony/config": "2.6.*"
     },
     "autoload": {
         "psr-4": {
