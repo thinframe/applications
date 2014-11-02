@@ -1,0 +1,8 @@
+parameters:
+  test.parameter: 'test.value'
+  overwritten.parameter: 'initial.value'
+services:
+  test.service:
+      class: 'stdClass'
+  overwritten.service:
+      class: 'nonExistentClass'

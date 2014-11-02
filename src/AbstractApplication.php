@@ -109,7 +109,9 @@ abstract class AbstractApplication
 
             $this->unifyApplications($this);
 
-            foreach ($this->applications as $application) {
+            $iterator = new ReverseIterator($this->applications);
+
+            foreach ($iterator as $application) {
                 $this->configurator->setCurrentApplication($application);
                 /* @var $application AbstractApplication */
                 $application->setConfiguration($this->configurator);

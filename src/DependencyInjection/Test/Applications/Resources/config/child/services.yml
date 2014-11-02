@@ -1,0 +1,14 @@
+parameters:
+  test.child.parameter: 'test.child.value'
+  overwritten.parameter: 'overwritten.value'
+services:
+  test.child.service:
+      class: 'stdClass'
+  overwritten.service:
+      class: 'stdClass'
+
+  trait.injection.service:
+      class: 'ThinFrame\Applications\DependencyInjection\Test\Mock\ContainerAwareMockWithTrait'
+
+  interface.injection.service:
+      class: 'ThinFrame\Applications\DependencyInjection\Test\Mock\ContainerAwareMockWithInterface'
