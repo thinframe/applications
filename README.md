@@ -2,9 +2,11 @@
 
 ThinFrame Applications is a PHP library build on top of Symfony2 Dependency Injection Container (S2DiC) that provides an abstract use over any PHP library/component.
 
+[![Build Status](https://secure.travis-ci.org/thinframe/applications.png?branch=develop)](http://travis-ci.org/thinframe/applications)
 [![Latest Stable Version](https://poser.pugx.org/thinframe/applications/v/stable.png)](https://packagist.org/packages/thinframe/applications)
 [![Latest Unstable Version](https://poser.pugx.org/thinframe/applications/v/unstable.png)](https://packagist.org/packages/thinframe/applications)
 [![License](https://poser.pugx.org/thinframe/applications/license.png)](https://packagist.org/packages/thinframe/applications)
+
 
 Using the S2DiC, you can define what services your component provides, which extensions/compiler passes it uses and some other details.
 This way, when you want to use a specific component, you don't have to worry about configuring it the right way or other related things.
