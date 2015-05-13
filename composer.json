@@ -17,9 +17,9 @@
     "require": {
         "php": ">=5.4.0",
         "thinframe/foundation": "0.3.*",
-        "symfony/dependency-injection": "2.6.*",
-        "symfony/yaml": "2.6.*",
-        "symfony/config": "2.6.*"
+        "symfony/dependency-injection": "2.*",
+        "symfony/yaml": "2.*",
+        "symfony/config": "2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.3.*"
